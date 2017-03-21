@@ -7,9 +7,10 @@ budget(
     Rent, RentAsAPercentageOfPreTax,
     Retirement, RetirementAsAPercentageOfPreTax,
     Groceries, GroceriesAsAPercentageOfPreTax,
+    Utilities, UtilitiesAsAPercentageOfPreTax,
     TakeHome,
     MonthlyExpenses,
-    _, %CurrentBalance
+    CurrentBalance, %CurrentBalance, always given.
     EmergencyFund, TimeToEmergencyFund) :-
   taxes(Taxes, Salary),
   % Of course this is an average. The early months will be less and
@@ -20,10 +21,11 @@ budget(
   {Rent = Salary * RentAsAPercentageOfPreTax / 12},
   {Retirement = Salary * RetirementAsAPercentageOfPreTax / 12},
   {Groceries = Salary * GroceriesAsAPercentageOfPreTax / 12},
-  {MonthlyExpenses = MonthlyPayment + Rent + Retirement + Groceries},
+  {Utilities = Salary * UtilitiesAsAPercentageOfPreTax / 12},
+  {MonthlyExpenses = MonthlyPayment + Rent + Retirement + Groceries + Utilities},
   {TakeHome = Salary / 12 - MonthlyExpenses},
   {EmergencyFund = MonthlyExpenses * 6},
-  {TimeToEmergencyFund = EmergencyFund / TakeHome}.
+  {TimeToEmergencyFund = (EmergencyFund - CurrentBalance) / TakeHome}.
 
 % 2016 Tax Brackets From:
 % https://www.nerdwallet.com/blog/taxes/federal-income-tax-brackets/
