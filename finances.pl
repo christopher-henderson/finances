@@ -1,5 +1,34 @@
 :- use_module(library(clpr)).
 
+% budget(
+    Salary,
+    PostTaxSalary,
+    Taxes, MonthlyTaxes,
+    Loans, YearsToRepayment, MonthlyPayment, LoansAsAPercentageOfPostTax,
+    Rent, RentAsAPercentageOfPostTax,
+    Retirement, RetirementAsAPercentageOfPostTax,
+    Groceries, GroceriesAsAPercentageOfPostTax,
+    Utilities, UtilitiesAsAPercentageOfPostTax,
+    TakeHome,
+    MonthlyExpenses,
+    CurrentBalance, %CurrentBalance, always given.
+    EmergencyFund, TimeToEmergencyFund) :-
+%   taxes(Taxes, Salary),
+%   {PostTaxSalary = Salary - Taxes},
+%   % Of course this is an average. The early months will be less and
+%   % the later months will be more.
+%   {MonthlyTaxes = Taxes / 12},
+%   {MonthlyPayment = (Loans / YearsToRepayment) / 12},
+%   {LoansAsAPercentageOfPostTax = MonthlyPayment / (PostTaxSalary / 12)},
+%   {Rent = PostTaxSalary * RentAsAPercentageOfPostTax / 12},
+%   {Retirement = PostTaxSalary * RetirementAsAPercentageOfPostTax / 12},
+%   {Groceries = PostTaxSalary * GroceriesAsAPercentageOfPostTax / 12},
+%   {Utilities = PostTaxSalary * UtilitiesAsAPercentageOfPostTax / 12},
+%   {MonthlyExpenses = MonthlyPayment + Rent + Retirement + Groceries + Utilities},
+%   {TakeHome = PostTaxSalary / 12 - MonthlyExpenses},
+%   {EmergencyFund = MonthlyExpenses * 6},
+%   {TimeToEmergencyFund = (EmergencyFund - CurrentBalance) / TakeHome}.
+
 budget(
     Salary,
     PostTaxSalary,
@@ -13,21 +42,46 @@ budget(
     MonthlyExpenses,
     CurrentBalance, %CurrentBalance, always given.
     EmergencyFund, TimeToEmergencyFund) :-
-  taxes(Taxes, Salary),
-  {PostTaxSalary = Salary - Taxes},
-  % Of course this is an average. The early months will be less and
-  % the later months will be more.
-  {MonthlyTaxes = Taxes / 12},
-  {MonthlyPayment = (Loans / YearsToRepayment) / 12},
-  {LoansAsAPercentageOfPostTax = MonthlyPayment / (PostTaxSalary / 12)},
-  {Rent = PostTaxSalary * RentAsAPercentageOfPostTax / 12},
-  {Retirement = PostTaxSalary * RetirementAsAPercentageOfPostTax / 12},
-  {Groceries = PostTaxSalary * GroceriesAsAPercentageOfPostTax / 12},
-  {Utilities = PostTaxSalary * UtilitiesAsAPercentageOfPostTax / 12},
-  {MonthlyExpenses = MonthlyPayment + Rent + Retirement + Groceries + Utilities},
-  {TakeHome = PostTaxSalary / 12 - MonthlyExpenses},
-  {EmergencyFund = MonthlyExpenses * 6},
-  {TimeToEmergencyFund = (EmergencyFund - CurrentBalance) / TakeHome}.
+      budget(Salary,
+        PostTaxSalary,
+        Taxes, MonthlyTaxes,
+        Retirement, RetirementAsAPercentageOfPostTax,
+        Groceries, GroceriesAsAPercentageOfPostTax,
+        Utilities, UtilitiesAsAPercentageOfPostTax),
+      {Rent = PostTaxSalary * RentAsAPercentageOfPostTax / 12},
+
+
+budget(
+    Salary,
+    PostTaxSalary,
+    Taxes, MonthlyTaxes,
+    Loans, YearsToRepayment, MonthlyPayment, LoansAsAPercentageOfPostTax,
+    HomePrice, DownPayment, Mortgage, MortgageAsAPercentageOfPostTax,
+    Retirement, RetirementAsAPercentageOfPostTax,
+    Groceries, GroceriesAsAPercentageOfPostTax,
+    Utilities, UtilitiesAsAPercentageOfPostTax,
+    TakeHome,
+    MonthlyExpenses,
+    CurrentBalance, %CurrentBalance, always given.
+    EmergencyFund, TimeToEmergencyFund) :-
+
+budget(
+  Salary,
+  PostTaxSalary,
+  Taxes, MonthlyTaxes,
+  Loans, YearsToRepayment, MonthlyPayment, LoansAsAPercentageOfPostTax,
+  Retirement, RetirementAsAPercentageOfPostTax,
+  Groceries, GroceriesAsAPercentageOfPostTax,
+  Utilities, UtilitiesAsAPercentageOfPostTax) :-
+    {PostTaxSalary = Salary - Taxes},
+    % Of course this is an average. The early months will be less and
+    % the later months will be more.
+    {MonthlyTaxes = Taxes / 12},
+    {MonthlyPayment = (Loans / YearsToRepayment) / 12},
+    {LoansAsAPercentageOfPostTax = MonthlyPayment / (PostTaxSalary / 12)},
+    {Retirement = PostTaxSalary * RetirementAsAPercentageOfPostTax / 12},
+    {Groceries = PostTaxSalary * GroceriesAsAPercentageOfPostTax / 12},
+    {Utilities = PostTaxSalary * UtilitiesAsAPercentageOfPostTax / 12}.
 
 % 2016 Tax Brackets From:
 % https://www.nerdwallet.com/blog/taxes/federal-income-tax-brackets/
