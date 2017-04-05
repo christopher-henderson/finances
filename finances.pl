@@ -14,14 +14,14 @@ budget(
     CurrentBalance, %CurrentBalance, always given.
     EmergencyFund, TimeToEmergencyFund) :-
   taxes(Taxes, Salary),
-  {PostTaxSalary = Salary - Taxes},
+  {Retirement = Salary * RetirementAsAPercentageOfPreTax / 12},
+  {PostTaxSalary = Salary - Taxes - Retirement},
   % Of course this is an average. The early months will be less and
   % the later months will be more.
   {MonthlyTaxes = Taxes / 12},
   {MonthlyPayment = (Loans / YearsToRepayment) / 12},
   {LoansAsAPercentageOfPostTax = MonthlyPayment / (PostTaxSalary / 12)},
   {Rent = PostTaxSalary * RentAsAPercentageOfPostTax / 12},
-  {Retirement = Salary * RetirementAsAPercentageOfPreTax / 12},
   {Groceries = PostTaxSalary * GroceriesAsAPercentageOfPostTax / 12},
   {Utilities = PostTaxSalary * UtilitiesAsAPercentageOfPostTax / 12},
   {MonthlyExpenses = MonthlyPayment + Rent + Retirement + Groceries + Utilities},

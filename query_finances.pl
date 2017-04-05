@@ -6,10 +6,14 @@
 main :-
   [finances],
   Salary = 120000,
-  Loans = 114000,
-  LoansAsAPercentageOfPreTax = 0.30,
+  Loans = 124000,
+  % LoansAsAPercentageOfPreTax = 0.30,
+  YearsToRepayment = 4,
   RentAsAPercentageOfPreTax = 0.25,
-  RetirementAsAPercentageOfPreTax = 0.11,
+  % RetirementAsAPercentageOfPreTax = 0.11,
+  % According to Betterment, I should contribute $13,499/year to reach
+  % withdrawals of 80k/year at age 68
+  Retirement = 1125,
   GroceriesAsAPercentageOfPreTax = 0.10,
   UtilitiesAsAPercentageOfPreTax = 0.05,
   % TimeToEmergencyFund = 6,
