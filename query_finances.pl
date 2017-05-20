@@ -9,7 +9,7 @@ main :-
   Loans = 114000,
   % LoansAsAPercentageOfPostTax = 0.20,
   YearsToRepayment = 4,
-  RentAsAPercentageOfPostTax = 0.25,
+  RentAsAPercentageOfPostTax = 0.30,
   RetirementAsAPercentageOfPreTax = 0.04,
   GroceriesAsAPercentageOfPostTax = 0.10,
   UtilitiesAsAPercentageOfPostTax = 0.02,
