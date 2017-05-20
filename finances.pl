@@ -4,7 +4,6 @@ budget(
     Salary,
     PostTaxSalary,
     Taxes, MonthlyTaxes,
-    Loans, YearsToRepayment, MonthlyPayment, LoansAsAPercentageOfPostTax,
     Rent, RentAsAPercentageOfPostTax,
     Retirement, RetirementAsAPercentageOfPreTax,
     Groceries, GroceriesAsAPercentageOfPostTax,
@@ -18,13 +17,11 @@ budget(
   % Of course this is an average. The early months will be less and
   % the later months will be more.
   {MonthlyTaxes = Taxes / 12},
-  {MonthlyPayment = (Loans / YearsToRepayment) / 12},
-  {LoansAsAPercentageOfPostTax = MonthlyPayment / (PostTaxSalary / 12)},
   {Rent = PostTaxSalary * RentAsAPercentageOfPostTax / 12},
-  {Retirement = Salary * RetirementAsAPercentageOfPreTax / 12 + 5500 / 12},
+  {Retirement = Salary * RetirementAsAPercentageOfPreTax / 12},
   {Groceries = PostTaxSalary * GroceriesAsAPercentageOfPostTax / 12},
   {Utilities = PostTaxSalary * UtilitiesAsAPercentageOfPostTax / 12},
-  {MonthlyExpenses = MonthlyPayment + Rent + Retirement + Groceries + Utilities},
+  {MonthlyExpenses = Rent + Retirement + Groceries + Utilities},
   {TakeHome = PostTaxSalary / 12 - MonthlyExpenses},
   {EmergencyFund = MonthlyExpenses * 6},
   {TimeToEmergencyFund = (EmergencyFund - CurrentBalance) / TakeHome}.
