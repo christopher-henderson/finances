@@ -14,7 +14,7 @@ main :-
   UtilitiesAsAPercentageOfPostTax = 0.02,
   % TimeToEmergencyFund = 6,
   CurrentBalance = 11000,
-  budget(
+  budget_rent(
       Salary, PostTaxSalary,
       Taxes, MonthlyTaxes,
       Loans, MonthlyPayment, Rate, LoansAsAPercentageOfPostTax, Term,

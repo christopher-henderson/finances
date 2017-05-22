@@ -1,6 +1,6 @@
 :- use_module(library(clpr)).
 
-budget(
+budget_rent(
     Salary,
     PostTaxSalary,
     Taxes, MonthlyTaxes,
@@ -13,7 +13,7 @@ budget(
     MonthlyExpenses,
     CurrentBalance, %CurrentBalance, always given.
     EmergencyFund, TimeToEmergencyFund) :-
-  taxes(Taxes, Salary, Salary * RetirementAsAPercentageOfPreTax),
+  taxes(Taxes, Salary, Salary * RetirementAsAPercentageOfPreTax, 0, 0),
   {PostTaxSalary = Salary - Taxes},
   % Of course this is an average. The early months will be less and
   % the later months will be more.
@@ -30,10 +30,43 @@ budget(
   {EmergencyFund = MonthlyExpenses * 6},
   {TimeToEmergencyFund = (EmergencyFund - CurrentBalance) / TakeHome}.
 
+budget_own(
+    Salary,
+    PostTaxSalary,
+    Taxes, MonthlyTaxes,
+    Loans, MonthlyPayment, Rate, LoansAsAPercentageOfPostTax, Term,
+    Mortgage, MortgageRate, MortgageTerm, HomeValue, MortgageAsAPercentageOfPostTax,
+    Retirement, RetirementAsAPercentageOfPreTax,
+    Groceries, GroceriesAsAPercentageOfPostTax,
+    Utilities, UtilitiesAsAPercentageOfPostTax,
+    TakeHome,
+    MonthlyExpenses,
+    CurrentBalance, %CurrentBalance, always given.
+    EmergencyFund, TimeToEmergencyFund) :-
+  taxes(Taxes, Salary, Salary * RetirementAsAPercentageOfPreTax, HomeValue, MortgageRate),
+  {PostTaxSalary = Salary - Taxes},
+  % Of course this is an average. The early months will be less and
+  % the later months will be more.
+  {MonthlyTaxes = Taxes / 12},
+  % Term and rate is in years. Divided by 12 for monthly payments.
+  {MonthlyPayment = (Rate * Loans) / (1 - (1 + Rate)^(-Term)) / 12},
+  {R = MortgageRate / 12},
+  {N = MortgageTerm * 12},
+  {Mortgage = HomeValue * ((R*(1 + R)^N)/((1 + R)^N - 1))},
+  % {Mortgage = (MortgageRate * HomeValue) / (1 - (1 + MortgageRate)^(-MortgageTerm)) / 12},
+  {MortgageAsAPercentageOfPostTax = Mortgage / PostTaxSalary},
+  {LoansAsAPercentageOfPostTax = MonthlyPayment / (PostTaxSalary / 12)},
+  {Retirement = Salary * RetirementAsAPercentageOfPreTax / 12 + 5500 / 12},
+  {Groceries = PostTaxSalary * GroceriesAsAPercentageOfPostTax / 12},
+  {Utilities = PostTaxSalary * UtilitiesAsAPercentageOfPostTax / 12},
+  {MonthlyExpenses = MonthlyPayment + Mortgage + Retirement + Groceries + Utilities},
+  {TakeHome = PostTaxSalary / 12 - MonthlyExpenses},
+  {EmergencyFund = MonthlyExpenses * 6},
+  {TimeToEmergencyFund = (EmergencyFund - CurrentBalance) / TakeHome}.
 
-taxes(Taxes, Salary, TaxAdvantagedRetirement) :-
-  federal_taxes(Federal, Salary, TaxAdvantagedRetirement),
-  california_taxes(California, Salary),
+taxes(Taxes, Salary, TaxAdvantagedRetirement, HomeValue, MortgageRate) :-
+  federal_taxes(Federal, Salary, TaxAdvantagedRetirement, HomeValue, MortgageRate),
+  california_taxes(California, Salary, HomeValue),
   {Taxes = Federal + California}.
 
 % 2016 Tax Brackets From:
@@ -47,7 +80,12 @@ taxes(Taxes, Salary, TaxAdvantagedRetirement) :-
 % $413,350 to $415,050	$119,934.75 plus 35% of the amount over $413,350
 % $415,050 or more	$120,529.75 plus 39.6% of the amount over $415,050
 %
-federal_taxes(Taxes, Salary, TaxAdvantagedRetirement) :- federal_taxes_(Taxes, Salary - TaxAdvantagedRetirement - 6300). % Standard deduction.
+federal_taxes(Taxes, Salary, TaxAdvantagedRetirement, 0, 0) :-
+  federal_taxes_(Taxes, Salary - TaxAdvantagedRetirement - 6300). % Standard deduction.
+federal_taxes(Taxes, Salary, TaxAdvantagedRetirement, HomeValue, MortgageRate) :-
+  {MortgageInterest = HomeValue * MortgageRate},
+  {PropertyTaxes = HomeValue * 0.00701},
+  federal_taxes_(Taxes, Salary - TaxAdvantagedRetirement - MortgageInterest - PropertyTaxes). % Standard deduction.
 federal_taxes_(Taxes, Salary) :- {Salary =< 9275}, !,
                         {Taxes = Salary * 0.10}.
 federal_taxes_(Taxes, Salary) :- {Salary =< 37650}, !,
@@ -71,29 +109,35 @@ federal_taxes_(Taxes, Salary) :- {Salary > 415050}, !,
 
 % 2016 tax brackets from
 % https://smartasset.com/taxes/california-tax-calculator
-california_taxes(Taxes, Salary) :- {Salary =< 7850}, !,
+california_taxes(Taxes, Salary, 0) :-
+  california_taxes_(Taxes, Salary).
+california_taxes(Taxes, Salary, HomeValue) :-
+  {PropertyTaxes = HomeValue * 0.00701},
+  california_taxes_(IncomeTaxes, Salary),
+  {Taxes = IncomeTaxes + PropertyTaxes}.
+california_taxes_(Taxes, Salary) :- {Salary =< 7850}, !,
                         {Taxes = Salary * 0.01}.
-california_taxes(Taxes, Salary) :- {Salary =< 18610}, !,
-                        california_taxes(ProgressiveTaxes, 7850),
+california_taxes_(Taxes, Salary) :- {Salary =< 18610}, !,
+                        california_taxes_(ProgressiveTaxes, 7850),
                         {Taxes = ProgressiveTaxes + (Salary - 7850) * 0.02}.
-california_taxes(Taxes, Salary) :- {Salary =< 29372}, !,
-                        california_taxes(ProgressiveTaxes, 18610),
+california_taxes_(Taxes, Salary) :- {Salary =< 29372}, !,
+                        california_taxes_(ProgressiveTaxes, 18610),
                         {Taxes = ProgressiveTaxes + (Salary - 18610) * 0.04}.
-california_taxes(Taxes, Salary) :- {Salary =< 40773}, !,
-                        california_taxes(ProgressiveTaxes, 29372),
+california_taxes_(Taxes, Salary) :- {Salary =< 40773}, !,
+                        california_taxes_(ProgressiveTaxes, 29372),
                         {Taxes = ProgressiveTaxes + (Salary - 29372) * 0.06}.
-california_taxes(Taxes, Salary) :- {Salary =< 51530}, !,
-                        california_taxes(ProgressiveTaxes, 40773),
+california_taxes_(Taxes, Salary) :- {Salary =< 51530}, !,
+                        california_taxes_(ProgressiveTaxes, 40773),
                         {Taxes = ProgressiveTaxes + (Salary - 40773) * 0.08}.
-california_taxes(Taxes, Salary) :- {Salary =< 263222}, !,
-                        california_taxes(ProgressiveTaxes, 51530),
+california_taxes_(Taxes, Salary) :- {Salary =< 263222}, !,
+                        california_taxes_(ProgressiveTaxes, 51530),
                         {Taxes = ProgressiveTaxes + (Salary - 51530) * 0.093}.
-california_taxes(Taxes, Salary) :- {Salary =< 315866}, !,
-                        california_taxes(ProgressiveTaxes, 263222),
+california_taxes_(Taxes, Salary) :- {Salary =< 315866}, !,
+                        california_taxes_(ProgressiveTaxes, 263222),
                         {Taxes = ProgressiveTaxes + (Salary - 263222) * 0.1030}.
-california_taxes(Taxes, Salary) :- {Salary =< 526443}, !,
-                        california_taxes(ProgressiveTaxes, 315866),
+california_taxes_(Taxes, Salary) :- {Salary =< 526443}, !,
+                        california_taxes_(ProgressiveTaxes, 315866),
                         {Taxes = ProgressiveTaxes + (Salary - 315866) * 0.1130}.
-california_taxes(Taxes, Salary) :- {Salary > 526443}, !,
-                        california_taxes(ProgressiveTaxes, 526443),
+california_taxes_(Taxes, Salary) :- {Salary > 526443}, !,
+                        california_taxes_(ProgressiveTaxes, 526443),
                         {Taxes = ProgressiveTaxes + (Salary - 526443) * 0.1230}.
