@@ -4,7 +4,7 @@ budget(
     Salary,
     PostTaxSalary,
     Taxes, MonthlyTaxes,
-    Loans, YearsToRepayment, MonthlyPayment, LoansAsAPercentageOfPostTax,
+    Loans, MonthlyPayment, Rate, LoansAsAPercentageOfPostTax, Term,
     Rent, RentAsAPercentageOfPostTax,
     Retirement, RetirementAsAPercentageOfPreTax,
     Groceries, GroceriesAsAPercentageOfPostTax,
@@ -18,7 +18,8 @@ budget(
   % Of course this is an average. The early months will be less and
   % the later months will be more.
   {MonthlyTaxes = Taxes / 12},
-  {MonthlyPayment = (Loans / YearsToRepayment) / 12},
+  {MonthlyPayment = (Rate * Loans) / (1 - (1 + Rate)^(-Term)) / 12},
+  % {MonthlyPayment = (Loans / YearsToRepayment) / 12},
   {LoansAsAPercentageOfPostTax = MonthlyPayment / (PostTaxSalary / 12)},
   {Rent = PostTaxSalary * RentAsAPercentageOfPostTax / 12},
   {Retirement = Salary * RetirementAsAPercentageOfPreTax / 12 + 5500 / 12},
