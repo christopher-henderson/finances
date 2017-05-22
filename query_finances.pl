@@ -7,7 +7,7 @@ main :-
   [finances],
   Salary = 120000,
   Loans = 114000,
-  Rate = 0.048, Term = 10,
+  Rate = 0.048, Term = 25,
   RentAsAPercentageOfPostTax = 0.30,
   RetirementAsAPercentageOfPreTax = 0.04,
   GroceriesAsAPercentageOfPostTax = 0.10,
