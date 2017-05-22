@@ -60,7 +60,7 @@ budget_own(
   {Groceries = PostTaxSalary * GroceriesAsAPercentageOfPostTax / 12},
   {Utilities = PostTaxSalary * UtilitiesAsAPercentageOfPostTax / 12},
   {MonthlyExpenses = MonthlyPayment + Mortgage + Retirement + Groceries + Utilities},
-  {TakeHome = PostTaxSalary / 12 - MonthlyExpenses},
+  {TakeHome = PostTaxSalary / 12 - MonthlyExpenses + 1600}, % Zack helping out with mortgage.
   {EmergencyFund = MonthlyExpenses * 6},
   {TimeToEmergencyFund = (EmergencyFund - CurrentBalance) / TakeHome}.
 
