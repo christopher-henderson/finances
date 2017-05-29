@@ -9,7 +9,7 @@ main :-
   Loans = 114000,
   Rate = 0.048, Term = 25,
   RentAsAPercentageOfPostTax = 0.30,
-  RetirementAsAPercentageOfPreTax = 0.04,
+  RetirementAsAPercentageOfPreTax = 0.09,
   GroceriesAsAPercentageOfPostTax = 0.10,
   UtilitiesAsAPercentageOfPostTax = 0.02,
   % TimeToEmergencyFund = 6,

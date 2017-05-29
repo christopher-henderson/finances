@@ -22,7 +22,7 @@ budget_rent(
   {MonthlyPayment = (Rate * Loans) / (1 - (1 + Rate)^(-Term)) / 12},
   {LoansAsAPercentageOfPostTax = MonthlyPayment / (PostTaxSalary / 12)},
   {Rent = PostTaxSalary * RentAsAPercentageOfPostTax / 12},
-  {Retirement = Salary * RetirementAsAPercentageOfPreTax / 12 + 5500 / 12},
+  {Retirement = Salary * RetirementAsAPercentageOfPreTax / 12},
   {Groceries = PostTaxSalary * GroceriesAsAPercentageOfPostTax / 12},
   {Utilities = PostTaxSalary * UtilitiesAsAPercentageOfPostTax / 12},
   {MonthlyExpenses = MonthlyPayment + Rent + Retirement + Groceries + Utilities},
