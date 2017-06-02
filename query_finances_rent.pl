@@ -7,7 +7,7 @@ main :-
   [finances],
   Salary = 120000,
   Loans = 121000,
-  Rate = 0.048, Term = 5,
+  Rate = 0.056, Term = 5,
   Rent = 2100,
   Retirement = 10000,
   DownPaymentContribution = 0,
