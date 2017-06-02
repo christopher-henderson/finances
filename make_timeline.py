@@ -10,7 +10,7 @@ class Month(object):
                  no_market_retirement,
                  low_market_retirement,
                  avg_market_retirement,
-                 highmarket_retirement,
+                 high_market_retirement,
                  no_market_down,
                  low_market_down,
                  avg_market_down,
@@ -20,7 +20,7 @@ class Month(object):
         self.no_market_retirement = no_market_retirement
         self.low_market_retirement = low_market_retirement
         self.avg_market_retirement = avg_market_retirement
-        self.high_market_retirement = highmarket_retirement
+        self.high_market_retirement = high_market_retirement
         self.no_market_down = no_market_down
         self.low_market_down = low_market_down
         self.avg_market_down = avg_market_down
@@ -32,16 +32,16 @@ class Month(object):
         # self.down_in_market = dm + dm * (0.03/12)
 
     def __str__(self):
-        return "{DATE},{SD},{NMR},{LMR},{MMR},{HMR},{NMD},{LMR},{MMD},{HMD}".format(
+        return "{DATE},{SD},{NMR},{LMR},{AMR},{HMR},{NMD},{LMD},{AMD},{HMD}".format(
             DATE=self.date.isoformat(),
             SD=self.debt,
             NMR=self.no_market_retirement,
             LMR=self.low_market_retirement,
-            MMR=self.avg_market_retirement,
+            AMR=self.avg_market_retirement,
             HMR=self.high_market_retirement,
             NMD=self.no_market_down,
             LMD=self.low_market_down,
-            MMD=self.avg_market_down,
+            AMD=self.avg_market_down,
             HMD=self.high_market_down
         )
 
