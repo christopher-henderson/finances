@@ -156,39 +156,33 @@ timeline.build(
     lambda _: True,
     0, 833, 2282,
     )
-print(timeline.csv())
 
-# timeline2 = Timeline(datetime(2018, 5, 1, 1, 1), 121000, 0.048, 24700, 0)
-# timeline2.build(
-#     lambda months, month: month.student_loans > 0,
-#     lambda _: True,
-#     2000, 833, 0,
-#     )
-# timeline2.build(
-#     lambda months, month: month.date.year <= 2028,
-#     spill,
-#     0, 833, 2000,
-#     )
-#
-# timeline3 = Timeline(datetime(2018, 5, 1, 1, 1), 121000, 0.048, 24700, 0)
-# timeline3.build(
-#     lambda months, month: month.student_loans > 62000,
-#     lambda _: True,
-#     2000, 833, 0,
-#     )
-# timeline3.build(
-#     lambda months, month: month.date.year <= 2028,
-#     spill,
-#     1149, 833, 851,
-#     )
-#
-# timeline4 = Timeline(datetime(2018, 5, 1, 1, 1), 121000, 0.048, 24700, 0)
-# timeline4.build(
-#     lambda months, month: month.date.year <= 2028,
-#     spill,
-#     664, 833, 1336,
-#     )
-# print(timeline.csv().split('\n')[-1])
-# print(timeline2.csv().split('\n')[-1])
-# print(timeline3.csv().split('\n')[-1])
-# print(timeline4.csv().split('\n')[-1])
+timeline2 = Timeline(datetime(2018, 5, 1, 1, 1), 121000, 0.048, 24700, 0)
+timeline2.build(
+    lambda months, month: month.student_loans > 62000,
+    spill,
+    2282, 833, 0,
+    )
+timeline2.student_loans.rate = 0.0365
+timeline2.build(
+    lambda months, month: month.date.year <= 2028,
+    spill,
+    1149, 833, 1149,
+    )
+
+timeline3 = Timeline(datetime(2018, 5, 1, 1, 1), 121000, 0.048, 24700, 0)
+timeline3.build(
+    lambda months, month: month.student_loans > 62000,
+    spill,
+    2282, 833, 0,
+    )
+timeline3.student_loans.rate = 0.0365
+timeline3.build(
+    lambda months, month: month.date.year <= 2028,
+    spill,
+    625, 833, 1657,
+    )
+
+print(timeline.csv().split('\n')[-1])
+print(timeline2.csv().split('\n')[-1])
+print(timeline3.csv().split('\n')[-1])
