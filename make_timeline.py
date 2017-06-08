@@ -144,7 +144,7 @@ def spill(month):
         month.down_payment.high_market += -month.student_loans.principle
         month.student_loans.principle = 0
 
-
+# 5 years to pay off loans, 5 years to build up down payment.
 timeline = Timeline(datetime(2018, 5, 1, 1, 1), 121000, 0.048, 24700, 0)
 timeline.build(
     lambda months, month: month.student_loans > 0,
@@ -157,6 +157,8 @@ timeline.build(
     0, 833, 2282,
     )
 
+# Take ten years to pay off student loans and start making contributions
+# to a down payment once I get the weighted average interest down.
 timeline2 = Timeline(datetime(2018, 5, 1, 1, 1), 121000, 0.048, 24700, 0)
 timeline2.build(
     lambda months, month: month.student_loans > 62000,
@@ -170,6 +172,7 @@ timeline2.build(
     1149, 833, 1149,
     )
 
+# Same as three, but pass the buck on student loans for another five years.
 timeline3 = Timeline(datetime(2018, 5, 1, 1, 1), 121000, 0.048, 24700, 0)
 timeline3.build(
     lambda months, month: month.student_loans > 62000,
@@ -183,6 +186,33 @@ timeline3.build(
     625, 833, 1657,
     )
 
+# Same as above but 25.
+timeline4 = Timeline(datetime(2018, 5, 1, 1, 1), 121000, 0.048, 24700, 0)
+timeline4.build(
+    lambda months, month: month.student_loans > 62000,
+    spill,
+    2282, 833, 0,
+    )
+timeline4.student_loans.rate = 0.0365
+timeline4.build(
+    lambda months, month: month.date.year <= 2028,
+    spill,
+    368, 833, 1914,
+    )
+
+# Split it up from the very beginning
+timeline5 = Timeline(datetime(2018, 5, 1, 1, 1), 121000, 0.048, 24700, 0)
+timeline5.build(
+    lambda months, month:  month.date.year <= 2028,
+    spill,
+    1260, 833, 1022,
+    )
+
 print(timeline.csv().split('\n')[-1])
 print(timeline2.csv().split('\n')[-1])
 print(timeline3.csv().split('\n')[-1])
+print(timeline4.csv().split('\n')[-1])
+# This is the best outcome out of the ones that actually pay off the loans#
+# within ten years. But not by a whole lot (avg marget performance says ~5k more)
+# Could be worse...or negative!
+print(timeline5.csv().split('\n')[-1])
