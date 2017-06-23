@@ -212,7 +212,7 @@ print(timeline.csv().split('\n')[-1])
 print(timeline2.csv().split('\n')[-1])
 print(timeline3.csv().split('\n')[-1])
 print(timeline4.csv().split('\n')[-1])
-# This is the best outcome out of the ones that actually pay off the loans#
+# This is the best outcome out of the ones that actually pay off the loans
 # within ten years. But not by a whole lot (avg marget performance says ~5k more)
-# Could be worse...or negative!
+# Low market performance is actuall worse than other options.
 print(timeline5.csv().split('\n')[-1])
