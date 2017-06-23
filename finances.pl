@@ -86,7 +86,11 @@ taxes(Taxes, Salary, TaxAdvantagedRetirement, HomeValue, MortgageRate) :-
 % $415,050 or more	$120,529.75 plus 39.6% of the amount over $415,050
 %
 federal_taxes(Taxes, Salary, TaxAdvantagedRetirement, 0, 0) :-
-  federal_taxes_(Taxes, Salary - TaxAdvantagedRetirement - 6300). % Standard deduction.
+  {AdjustedIncome = Salary - TaxAdvantagedRetirement - 6300}, % Standard deduction.
+  social_security(SS, AdjustedIncome),
+  medicare(Medicare, AdjustedIncome),
+  federal_taxes_(IncomeTaxes, AdjustedIncome),
+  {Taxes = SS + Medicare + IncomeTaxes}.
 federal_taxes(Taxes, Salary, TaxAdvantagedRetirement, HomeValue, MortgageRate) :-
   {MortgageInterest = HomeValue * MortgageRate},
   {PropertyTaxes = HomeValue * 0.00701},
@@ -111,6 +115,24 @@ federal_taxes_(Taxes, Salary) :- {Salary =< 415050}, !,
 federal_taxes_(Taxes, Salary) :- {Salary > 415050}, !,
                         federal_taxes_(ProgressiveTaxes, 415050),
                         {Taxes = ProgressiveTaxes + (Salary - 415050) * 0.396}.
+
+% 2017 Tax Law
+% https://www.irs.gov/publications/p15/ar02.html#en_US_2017_publink1000202367
+%
+% For 2017, the social security tax rate is 6.2% (amount withheld)
+% each for the employer and employee (12.4% total). The social security wage
+% base limit is $127,200. The tax rate for Medicare is 1.45% (amount withheld)
+% each for the employee and employer (2.9% total). There is no wage base limit
+% for Medicare tax; all covered wages are subject to Medicare tax.
+social_security(SS, Income):-
+  {Income =< 127200},
+  {SS = Income * 0.062}.
+social_security(SS, Income):-
+  {WageLimitedIncome = Income - (Income - 127200)},
+  {SS = WageLimitedIncome * 0.062}.
+medicare(Medicare, Income):-
+  {Medicare = Income * 0.0145}.
+
 
 % 2016 tax brackets from
 % https://smartasset.com/taxes/california-tax-calculator
