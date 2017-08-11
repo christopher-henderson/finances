@@ -87,7 +87,7 @@ taxes(Taxes, Salary, TaxAdvantagedRetirement, HomeValue, MortgageRate) :-
 % $415,050 or more	$120,529.75 plus 39.6% of the amount over $415,050
 %
 federal_taxes(Taxes, Salary, TaxAdvantagedRetirement, 0, 0) :-
-  {AdjustedIncome = Salary - TaxAdvantagedRetirement - 630}, % Standard deduction.
+  {AdjustedIncome = Salary - TaxAdvantagedRetirement - 6300}, % Standard deduction.
   social_security(SS, AdjustedIncome),
   medicare(Medicare, AdjustedIncome),
   federal_taxes_(IncomeTaxes, AdjustedIncome),
