@@ -86,7 +86,7 @@ taxes(Taxes, Salary, TaxAdvantagedRetirement, HomeValue, MortgageRate) :-
 % $415,050 or more	$120,529.75 plus 39.6% of the amount over $415,050
 %
 federal_taxes(Taxes, Salary, TaxAdvantagedRetirement, 0, 0) :-
-  {AdjustedIncome = Salary - TaxAdvantagedRetirement - 6300}, % Standard deduction.
+  {AdjustedIncome = Salary - TaxAdvantagedRetirement - 630}, % Standard deduction.
   social_security(SS, AdjustedIncome),
   medicare(Medicare, AdjustedIncome),
   federal_taxes_(IncomeTaxes, AdjustedIncome),
@@ -137,11 +137,14 @@ medicare(Medicare, Income):-
 % 2016 tax brackets from
 % https://smartasset.com/taxes/california-tax-calculator
 california_taxes(Taxes, Salary, 0) :-
-  california_taxes_(Taxes, Salary).
+  california_disability_tax(DisabilityTaxes, Salary),
+  california_taxes_(IncomeTaxes, Salary),
+  {Taxes = IncomeTaxes + DisabilityTaxes}.
 california_taxes(Taxes, Salary, HomeValue) :-
+  california_disability_tax(DisabilityTaxes, Salary),
   {PropertyTaxes = HomeValue * 0.00701},
   california_taxes_(IncomeTaxes, Salary),
-  {Taxes = IncomeTaxes + PropertyTaxes}.
+  {Taxes = IncomeTaxes + PropertyTaxes + DisabilityTaxes}.
 california_taxes_(Taxes, Salary) :- {Salary =< 7850}, !,
                         {Taxes = Salary * 0.01}.
 california_taxes_(Taxes, Salary) :- {Salary =< 18610}, !,
@@ -168,3 +171,5 @@ california_taxes_(Taxes, Salary) :- {Salary =< 526443}, !,
 california_taxes_(Taxes, Salary) :- {Salary > 526443}, !,
                         california_taxes_(ProgressiveTaxes, 526443),
                         {Taxes = ProgressiveTaxes + (Salary - 526443) * 0.1230}.
+
+california_disability_tax(Taxes, Salary) :- {Taxes = Salary * 0.009}.
