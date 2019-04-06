@@ -2,21 +2,20 @@
 
 :- initialization main.
 
-
 main :-
   [finances],
-  Salary = 120000,
-  Loans = 135000,
-  Rate = 0.0428, Term = 10,
-  Rent = 2400,
+  Salary = 174200,
+  Loans = 110000,
+  Rate = 0.0428, Term = 2,
+  Rent = 2695,
   Retirement = 10000,
   DownPaymentContribution = 0,
-  Lifestyle = 1022,
+  Lifestyle = 1160,
   Utilities = 150,
-  CurrentBalance = 24000,
+  CurrentBalance = 20000,
   budget_rent(
       Salary, PostTaxSalary,
-      Taxes, MonthlyTaxes,
+      Taxes, Federal, California, MonthlyTaxes,
       Loans, MonthlyPayment, Rate, LoansAsAPercentageOfPostTax, Term,
       Rent, RentAsAPercentageOfPostTax,
       Retirement, MonthlyRetirement, RetirementAsAPercentageOfPreTax,
@@ -37,6 +36,8 @@ main :-
   format(ROW_SEPARATOR, ["Monthly Taxes", MonthlyTaxes]),
   format(ROW_SEPARATOR, ["Annual Taxes", Taxes]),
   format(ROW_SEPARATOR, ["Post-Tax Salary", PostTaxSalary]),
+  format(ROW_SEPARATOR, ["Federal Taxes", Federal]),
+  format(ROW_SEPARATOR, ["California Taxes", California]),
 
   format(SECTION_SEPARATOR), nl,
   write("Student Loans"), nl,

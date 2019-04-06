@@ -6,7 +6,7 @@
 main :-
   [finances],
   Salary = 120000,
-  Loans = 121000,
+  Loans = 126000,
   Rate = 0.048, Term = 10,
   HomeValue = 600000, MortgageRate = 0.06375, MortgageTerm = 30,
   RetirementAsAPercentageOfPreTax = 0.09,
@@ -15,10 +15,10 @@ main :-
   % GroceriesAsAPercentageOfPostTax = 0.10,
   UtilitiesAsAPercentageOfPostTax = 0.02,
   % TimeToEmergencyFund = 6,
-  CurrentBalance = 11000,
+  CurrentBalance = 26000,
   budget_own(
       Salary, PostTaxSalary,
-      Taxes, MonthlyTaxes,
+      Taxes, Federal, California, MonthlyTaxes,
       Loans, MonthlyPayment, Rate, LoansAsAPercentageOfPostTax, Term,
       Mortgage, MortgageRate, MortgageTerm, HomeValue, MortgageAsAPercentageOfPostTax, HOA,
       Retirement, MonthlyRetirement, RetirementAsAPercentageOfPreTax,
@@ -38,6 +38,9 @@ main :-
     format(ROW_SEPARATOR, ["Monthly Taxes", MonthlyTaxes]),
     format(ROW_SEPARATOR, ["Annual Taxes", Taxes]),
     format(ROW_SEPARATOR, ["Post-Tax Salary", PostTaxSalary]),
+    format(ROW_SEPARATOR, ["Federal Taxes", Federal]),
+    format(ROW_SEPARATOR, ["California Taxes", California]),
+
 
     format(SECTION_SEPARATOR), nl,
     write("Student Loans"), nl,
